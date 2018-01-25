@@ -31,7 +31,6 @@ def cut_good_name(word):
 
 def normalize(inventory):
     result_inventory = {}
-    print('inventory', inventory)
     for item in inventory.items():
         if not item[0]:
             continue
