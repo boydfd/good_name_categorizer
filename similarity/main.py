@@ -1,12 +1,17 @@
 import codecs
 import operator
 import logging
+import os
 
 from gensim import corpora, models, similarities
 from jieba import posseg
 
 import jieba
 
+
+def get_path(path):
+    directory = os.path.dirname(__file__)
+    return os.path.join(directory, path)
 
 class Similarity:
     def __init__(self, category, user_dict_path=None):
@@ -24,7 +29,7 @@ class Similarity:
         self.init_category()
 
     def init_stop_words(self):
-        stop_words = './stop_words.txt'
+        stop_words = get_path('./stop_words.txt')
         stopwords = codecs.open(stop_words, 'r', encoding='utf8').readlines()
         self.stopwords = [w.strip() for w in stopwords]
         self.stop_flag = ['x', 'c', 'u', 'd', 'p', 't', 'uj', 'm', 'f', 'r']
