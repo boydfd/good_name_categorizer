@@ -13,6 +13,7 @@ def get_path(path):
     directory = os.path.dirname(__file__)
     return os.path.join(directory, path)
 
+
 class Similarity:
     def __init__(self, category, user_dict_path=None):
         if user_dict_path:
@@ -76,7 +77,7 @@ class Similarity:
                 similarity
             )
 
-        return [parse_similarity_to_string(*item)for item in sims]
+        return [parse_similarity_to_string(*item) for item in sims]
 
     def calculate_similarity_lsi(self, query):
         query = self.tokenize(query)

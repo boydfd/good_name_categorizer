@@ -44,6 +44,21 @@ def normalize(inventory):
     return result_inventory
 
 
+def cut_every_good_name_row(source_good_path, output_path, user_dict):
+    df = pd.read_csv(source_good_path)
+
+    if user_dict:
+        jieba.load_userdict(user_dict)
+
+    def cut_with_comma(word):
+        return ','.join([item for item in cut_good_name(word) if item != '' and item != ' '])
+
+    pattern = re.compile('[ \\\\/,;；，、|()（）.]')
+    df['name'] = df['name'].map(lambda row: re.sub(pattern, ' ', row)).dropna().map(cut_with_comma)
+
+    df.to_csv(output_path, index=False)
+
+
 def cut_goods(source_goods_path,
               output_path,
               user_dict=None,
