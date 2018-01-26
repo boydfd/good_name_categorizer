@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 import pandas as pd
 
@@ -76,6 +78,9 @@ def calculate_similarity(similarity_callback, good_names):
 
 def process_similarity(good_name_path, output_path):
     with open(output_path, 'w') as f:
+        df = pd.read_csv(good_name_path)
+        names = df[df.columns[0]].values
+        count = len(names)
         def process(name, sims, index):
             similarity = get_similarity()
             sims = average_similarity(sims)
@@ -83,9 +88,10 @@ def process_similarity(good_name_path, output_path):
             f.write('%s %s\n' % (name, str(sims)))
             if index % 10 == 0:
                 f.flush()
+                logging.info('already process %.2f%%' % (index * 100. / count))
 
-        df = pd.read_csv(good_name_path)
-        calculate_similarity(process, df[df.columns[0]].values)
+
+        calculate_similarity(process, names)
 
 
 def average_similarity(all_similarities):

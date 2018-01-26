@@ -21,13 +21,16 @@ class Similarity:
             jieba.load_userdict(user_dict_path)
             logging.info('end loading user dictionary')
         self.category = category
+        self.category_num = len(self.category.list)
         self.stopwords = None
         self.stop_flag = None
         self.dictionary = None
         self.lsi = None
         self.lsi_vector = None
         self.init_stop_words()
+        logging.info('start calculate category vector')
         self.init_category()
+        logging.info('end calculate category vector')
 
     def init_stop_words(self):
         stop_words = get_path('./stop_words.txt')
@@ -83,6 +86,6 @@ class Similarity:
         query = self.tokenize(query)
         query_bow = self.dictionary.doc2bow(query)
         query_lsi = self.lsi[query_bow]
-        index = similarities.MatrixSimilarity(self.lsi_vector)
+        index = similarities.MatrixSimilarity(self.lsi_vector, num_features=self.category_num)
         sims = index[query_lsi]
         return sims
