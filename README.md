@@ -5,4 +5,4 @@
 		origin_good_name_path = get_path('./good_name/goods.csv')
 	2. config dictionary path  
 		origin_dict_path = get_path('./dictionaries/filtered_dict.txt')
-2. python3 
+2. python3 main.py
