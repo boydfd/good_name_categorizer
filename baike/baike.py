@@ -7,7 +7,7 @@ from urllib.request import urlopen
 import jieba.posseg as pseg
 from bs4 import BeautifulSoup
 
-from utilities import get_model, retry_for_exception
+from utilities import get_model, retry_for_exception, retry_for_exception_decorator
 
 
 def get_path(path):
@@ -48,11 +48,10 @@ def parse_html(html):
     return soup.find(class_='main-content').text
 
 
+@retry_for_exception_decorator(timeout)
 def get_baike_html_from_url(url):
-    def get_html():
-        return urlopen(url, timeout=5).read().decode('utf-8')
+    return urlopen(url, timeout=5).read().decode('utf-8')
 
-    return retry_for_exception(timeout, get_html)
 
 
 def get_all_noun_form_word(word):
