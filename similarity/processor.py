@@ -57,7 +57,7 @@ class SimilarityCalculator:
                 all_similarities.append(similarity)
                 self.saved_similarities_dict[name] = similarity
             except Exception as e:
-                logging.info(e)
+                logging.info(str(name) + ':    ' + str(e))
         return all_similarities
 
     def _get_names_unsaved(self, names):
