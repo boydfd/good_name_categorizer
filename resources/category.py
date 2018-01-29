@@ -3,7 +3,7 @@ import os
 import logging
 
 from baike import get_word
-from utilities import flatten
+from utilities import flatten, retry_for_exception_decorator
 
 
 class Category:
@@ -30,12 +30,16 @@ class Category:
     def persist_text(self):
         logging.info('start persisting category ')
         for category in self.list:
-            path = self.get_category_path(category)
-            if not os.path.exists(path):
-                logging.info('%s not exist locally, start crawling it' % category)
-                with open(path, 'w') as file:
-                    file.write(get_word(category).text)
+            self.persist_category(category)
         logging.info('end persisting category ')
+
+    @retry_for_exception_decorator(TypeError)
+    def persist_category(self, category):
+        path = self.get_category_path(category)
+        if not os.path.exists(path):
+            logging.info('%s not exist locally, start crawling it' % category)
+            with open(path, 'w') as file:
+                file.write(get_word(category).text)
 
     def get_category_path(self, category):
         return self.category_text_dir_path + category + '.txt'
