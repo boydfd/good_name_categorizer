@@ -39,3 +39,4 @@ def pre_process_all():
         resource.good_name_row_cut_path,
         resource.user_dict_path
     )
+    logging.info('end of pre-processing')

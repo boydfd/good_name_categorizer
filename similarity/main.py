@@ -82,10 +82,22 @@ class Similarity:
 
         return [parse_similarity_to_string(*item) for item in sims]
 
+    def get_result_category_from_similarity(self, sims):
+        if len(sims) == 0:
+            return ""
+        sims = list(enumerate(sims))
+        sims = sorted(sims, key=operator.itemgetter(1), reverse=True)[0]
+
+        def parse_similarity_to_string(index):
+            category_name = self.category.list[index]
+            return self.category.inverse_words[category_name]
+
+        return parse_similarity_to_string(sims[0])
+
     def calculate_similarity_lsi(self, query):
         query = self.tokenize(query)
         query_bow = self.dictionary.doc2bow(query)
         query_lsi = self.lsi[query_bow]
-        index = similarities.MatrixSimilarity(self.lsi_vector, num_features=self.category_num)
+        index = similarities.MatrixSimilarity(self.lsi_vector, num_features=len(self.dictionary))
         sims = index[query_lsi]
         return sims

@@ -26,7 +26,7 @@ def save_good_name_to_similarity_vector(good_names, output_path):
                 vector_output.write(output_row)
             except Exception as e:
                 error_row = 'name: %s, error: %s\n' % (good_name, str(e))
-                error_name_output.write(good_name + '\n')
+                error_name_output.write(str(good_name) + '\n')
                 error_output.write(error_row)
 
             if index % 10 == 0:
@@ -77,19 +77,32 @@ def calculate_similarity(similarity_callback, good_names):
 
 
 def process_similarity(good_name_path, output_path):
-    with open(output_path, 'w') as f:
+    output_path = append_slash_if_omitted(output_path)
+    with open(output_path + 'verbose.txt', 'w') as verbose, \
+            open(output_path + 'result.txt', 'w') as result:
         df = pd.read_csv(good_name_path)
         names = df[df.columns[0]].values
+        origin_names = df[df.columns[1]].values
         count = len(names)
+
         def process(name, sims, index):
             similarity = get_similarity()
             sims = average_similarity(sims)
-            sims = similarity.format_similarity(sims)
-            f.write('%s %s\n' % (name, str(sims)))
-            if index % 10 == 0:
-                f.flush()
-                logging.info('already process %.2f%%' % (index * 100. / count))
+            format_sims = similarity.format_similarity(sims)
+            verbose.write('%s --- %s --- %s\n' % (
+                origin_names[index],
+                name,
+                str(format_sims),
+            ))
 
+            result.write(
+                '%s ---- %s\n' % (origin_names[index], similarity.get_result_category_from_similarity(sims))
+            )
+
+            if index % 10 == 0:
+                verbose.flush()
+                result.flush()
+                logging.info('already process %.2f%%' % (index * 100. / count))
 
         calculate_similarity(process, names)
 

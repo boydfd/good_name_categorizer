@@ -54,9 +54,10 @@ def cut_every_good_name_row(source_good_path, output_path, user_dict):
         return ','.join([item for item in cut_good_name(word) if item != '' and item != ' '])
 
     pattern = re.compile('[ \\\\/,;；，、|()（）.]')
-    df['name'] = df['name'].map(lambda row: re.sub(pattern, ' ', row)).dropna().map(cut_with_comma)
+    df['cut_name'] = df['name'].map(lambda row: re.sub(pattern, ' ', row)).dropna().map(
+        cut_with_comma)
 
-    df.to_csv(output_path, index=False)
+    df.to_csv(output_path, index=False, columns=['cut_name', 'name'])
 
 
 def cut_goods(source_goods_path,

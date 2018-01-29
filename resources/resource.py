@@ -30,7 +30,7 @@ origin_dict_path = get_path('./dictionaries/filtered_dict.txt')
 dict_without_english_path = get_path('./dictionaries/filtered_dict_without_english.csv')
 
 similarity_output_path = get_path('./similarities/')
-good_name_similarity_output_path = similarity_output_path + 'good_name_similarity.txt'
+good_name_similarity_output_path = similarity_output_path
 
 
 def get_similarity() -> Similarity:
