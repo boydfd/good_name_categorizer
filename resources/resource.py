@@ -1,5 +1,6 @@
 from resources.category import Category
 import os
+import numpy as np
 import pickle
 
 from similarity.main import Similarity
@@ -42,4 +43,8 @@ def get_similarity() -> Similarity:
 
 
 def get_saved_similarity():
-    return {}
+    with open(similarity_output_path + '/vectors.txt', 'r') as f:
+        return {
+            w[0]: np.asarray(w[1:], np.float32)
+            for word in f.read().split('\n') if word is not '' for w in [word.split(' ')]
+        }

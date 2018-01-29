@@ -1,4 +1,5 @@
 import logging
+from multiprocessing import Process, Array, Queue
 
 import numpy as np
 import pandas as pd
@@ -55,8 +56,8 @@ class SimilarityCalculator:
                 similarity = self.similarity.calculate_similarity_lsi(baike)
                 all_similarities.append(similarity)
                 self.saved_similarities_dict[name] = similarity
-            except:
-                pass
+            except Exception as e:
+                logging.info(e)
         return all_similarities
 
     def _get_names_unsaved(self, names):
@@ -67,16 +68,19 @@ class SimilarityCalculator:
                 self.saved_similarities_dict]
 
 
-def calculate_similarity(similarity_callback, good_names):
+def calculate_similarity(similarity_callback, good_names, indexes, q1, q2):
+    print('ddddddddddddd')
     saved_similarities_dict = resource.get_saved_similarity()
     similarity_calculator = SimilarityCalculator(saved_similarities_dict, get_similarity())
-    for index, names in enumerate(good_names):
+    for index in range(*indexes):
+        names = good_names[index]
         names = names.split(',')
         similarity = similarity_calculator.process(names)
-        similarity_callback(names, similarity, index)
+        similarity_callback(names, similarity, index, q1, q2)
 
 
 def process_similarity(good_name_path, output_path):
+    get_similarity()
     output_path = append_slash_if_omitted(output_path)
     with open(output_path + 'verbose.txt', 'w') as verbose, \
             open(output_path + 'result.txt', 'w') as result:
@@ -85,26 +89,57 @@ def process_similarity(good_name_path, output_path):
         origin_names = df[df.columns[1]].values
         count = len(names)
 
-        def process(name, sims, index):
+        def process(name, sims, index, verbose_queue, result_queue):
             similarity = get_similarity()
             sims = average_similarity(sims)
             format_sims = similarity.format_similarity(sims)
-            verbose.write('%s --- %s --- %s\n' % (
+            verbose_queue.put('%s --- %s --- %s\n' % (
                 origin_names[index],
                 name,
                 str(format_sims),
             ))
 
-            result.write(
-                '%s ---- %s\n' % (origin_names[index], similarity.get_result_category_from_similarity(sims))
+            result_queue.put(
+                '%s ---- %s\n' % (
+                    origin_names[index],
+                    similarity.get_result_category_from_similarity(sims))
             )
 
-            if index % 10 == 0:
-                verbose.flush()
-                result.flush()
-                logging.info('already process %.2f%%' % (index * 100. / count))
+        def write_processor(verbose_queue, result_queue):
+            for index in range(10000000):
+                verbose.write(verbose_queue.get())
+                result.write(result_queue.get())
 
-        calculate_similarity(process, names)
+                if index % 30 == 0:
+                    verbose.flush()
+                    result.flush()
+                    logging.info('already process %.2f%%' % (index * 100. / count))
+
+        verbose_queue = Queue()
+        result_queue = Queue()
+
+        p2 = Process(target=write_processor, args=(verbose_queue, result_queue))
+        p2.start()
+
+        def split_work(num):
+            width = int(count / num)
+
+            def get_indexes(i):
+                end_index = (i + 1) * width
+                max_count = count - 1
+                return [i * width, min(max_count, end_index)]
+
+            processes = [Process(
+                target=calculate_similarity,
+                args=(process, names, get_indexes(i), verbose_queue, result_queue))
+                for i in range(num)]
+            for p in processes:
+                p.start()
+            for p in processes:
+                p.join()
+
+        split_work(8)
+        p2.join()
 
 
 def average_similarity(all_similarities):
