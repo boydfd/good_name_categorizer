@@ -1,12 +1,13 @@
+import os
+from _socket import timeout
 from typing import List
 from urllib.parse import quote
 from urllib.request import urlopen
 
-import os
+import jieba.posseg as pseg
 from bs4 import BeautifulSoup
 
-import jieba.posseg as pseg
-from utilities import retry_for_timeout, get_model
+from utilities import get_model, retry_for_exception
 
 
 def get_path(path):
@@ -30,7 +31,7 @@ def search_in_baike_link_by_word(word):
         return urlopen('https://baike.baidu.com/search?word=%s' % quote(word),
                        timeout=5).read()
 
-    page = retry_for_timeout(get_html_from_baike_search)
+    page = retry_for_exception(timeout, get_html_from_baike_search)
     soup = BeautifulSoup(page, "html.parser")
     try:
         found_result = soup.find(class_='result-title')
@@ -51,7 +52,7 @@ def get_baike_html_from_url(url):
     def get_html():
         return urlopen(url, timeout=5).read().decode('utf-8')
 
-    return retry_for_timeout(get_html)
+    return retry_for_exception(timeout, get_html)
 
 
 def get_all_noun_form_word(word):

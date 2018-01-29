@@ -1,0 +1,20 @@
+from unittest import TestCase
+from unittest.mock import MagicMock
+
+from utilities import retry_for_exception
+
+
+class UtilitiesTest(TestCase):
+    def test_retryForException_whenThrowException_shouldRetry(self):
+        mock = MagicMock()
+
+        def call():
+            raise KeyError
+
+        mock.side_effect = call
+
+        try:
+            retry_for_exception(KeyError, mock, 10)
+        except Exception as e:
+            self.assertIsInstance(e, KeyError)
+        self.assertEquals(10, mock.call_count)

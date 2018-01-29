@@ -78,17 +78,18 @@ def get_jieba_with_dict():
     return get_model(path, callback)
 
 
-def retry_for_timeout(function, times=5):
+def retry_for_exception(exception, function, times=5):
     for i in range(times):
         try:
             return function()
-        except timeout:
+        except exception:
             if i + 1 == times:
-                raise timeout
+                raise exception
 
 
 def append_slash_if_omitted(path):
     return path if path.endswith('/') else path + '/'
+
 
 def get_saved_similarities():
     with open('./output/similarities/standard_result.txt') as f:
