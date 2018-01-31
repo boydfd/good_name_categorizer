@@ -1,6 +1,7 @@
 import re
 import os
 import logging
+import yaml
 
 from baike import get_word
 from utilities import flatten, retry_for_exception_decorator
@@ -11,7 +12,7 @@ class Category:
         self.category_text_dir_path = self.append_slash_if_omitted(category_text_dir_path)
         self.texts = None
         with open(category_source_path) as file:
-            words = self.parse_categories_dict(self.parse_categories(file.read()))
+            words = self.parse_categories_yaml(yaml.load(file.read()))
             self.list = sorted(flatten(words.values()))
             self.inverse_words = self.create_inverse_index(words)
 
@@ -73,3 +74,7 @@ class Category:
     @staticmethod
     def create_inverse_index(dictionary):
         return {value: key for key, values in dictionary.items() for value in [key] + values}
+
+    @staticmethod
+    def parse_categories_yaml(categories):
+        return {category['category_name']: category['sub_category'] for category in categories}

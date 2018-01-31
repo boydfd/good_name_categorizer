@@ -1,0 +1,156 @@
+---
+- category_name: 材料
+  sub_category:
+    - 矿石
+    - 金属矿石
+    - 泥土
+    - 水泥
+    - 建设材料
+    - 砖
+    - 玻璃
+
+- category_name: 有色金属
+  sub_category:
+    - 有色金属
+    - 合金
+    - 钢铁
+    - 五金
+
+- category_name: 木材
+  sub_category:
+    - 原木
+    - 木柴
+    - 木材
+
+- category_name: 食品、烟酒、调味品
+  sub_category:
+    - 食品
+    - 粮食
+    - 水果
+    - 酒
+    - 饮料
+    - 调味品
+    - 蔬菜
+    - 烟
+    - 面包
+    - 熟食
+    - 肉
+
+- category_name: 植物
+  sub_category:
+    - 植物
+    - 树木
+    - 灌木
+    - 藤
+    - 青草
+    - 蕨类
+    - 及绿藻
+    - 地衣
+
+
+- category_name: 海鲜
+  sub_category:
+    - 鱼类
+    - 甲壳类
+    - 虾类
+    - 蟹类
+    - 贝类
+    - 软体动物
+    - 棘皮动物门
+
+- category_name: 工业机械、电器、仪器、数码产品
+  sub_category:
+    - 工业机械
+    - 电器
+    - 仪器
+    - 机器
+    - 电动机
+    - 内燃机
+    - 电子计算机
+    - 显示器
+    - CPU
+    - 灯泡
+    - 家电
+    - 数码产品
+    - 数码
+    - 平板
+    - 手机
+
+- category_name: 动物
+  sub_category:
+    - 犬类
+    - 猫类
+    - 兔类
+    - 鼠类
+    - 鸟类
+    - 两栖类
+    - 爬行类
+    - 虫类
+
+- category_name: 其他快递公司
+  sub_category:
+    - 快递
+    - 速递
+    - 顺丰速运
+    - 跨越速运
+    - 百世汇通
+    - 宅急送
+    - 中通快递
+    - 申通快递
+    - 圆通快递
+    - 韵达快递
+    - 国通快递
+
+- category_name: 医药品
+  sub_category:
+    - 药品
+    - 西药
+    - 医药用品
+    - 中成药
+    - 中药材
+
+- category_name: 文体用具
+  sub_category:
+    - 文体用具
+    - 纸
+    - 文具
+    - 书
+    - 体育用品
+    - 乐器
+    - 玩具
+
+- category_name: 纺织品、衣被鞋帽
+  sub_category:
+    - 纺织品
+    - 衣服
+    - 服装
+    - 鞋
+    - 帽
+    - 床上用品
+    - 针织品
+    - 丝
+
+- category_name: 交通工具
+  sub_category:
+    - 交通工具
+    - 自行车
+    - 火箭
+    - 飞行器
+    - 手推车
+    - 残疾人用车
+    - 汽车
+    - 摩托车
+    - 飞机
+    - 船
+
+- category_name: 小百货、化妆品
+  sub_category:
+    - 百货
+    - 化妆品
+    - 日用品
+    - 洗涤剂
+
+- category_name: 混装物
+  sub_category:
+    - CONSOL
+    - 普货

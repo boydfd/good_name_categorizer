@@ -14,7 +14,7 @@ def get_path(path):
 
 category_texts_path = get_path('./category_texts/')
 
-category = Category(get_path('./category.txt'), category_texts_path)
+category = Category(get_path('./category.yml'), category_texts_path)
 
 user_dict_path = get_path('./dictionaries/filtered_dict_without_english.csv')
 
