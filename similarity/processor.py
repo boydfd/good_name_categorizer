@@ -15,16 +15,24 @@ def save_good_name_to_similarity_vector(good_names, output_path):
     vector_path = output_path + 'vectors.txt'
     error_path = output_path + 'errors.txt'
     error_list_path = output_path + 'error_name_list.txt'
+    vector_names_path = output_path + 'vector_names.txt'
     with open(vector_path, 'w') as vector_output, \
             open(error_path, 'w') as error_output, \
-            open(error_list_path, 'w') as error_name_output:
+            open(error_list_path, 'w') as error_name_output, \
+            open(vector_names_path, 'w') as vector_names_output:
         for index, good_name in enumerate(good_names):
             try:
                 good_text = get_word_text(good_name)
-                similarities = get_similarity().calculate_similarity_lsi(good_text)
+                similarity = get_similarity()
+                similarities = similarity.calculate_similarity_lsi(good_text)
                 similarity_vector = ' '.join(list(similarities.astype(str)))
                 output_row = '%s %s\n' % (good_name, similarity_vector)
                 vector_output.write(output_row)
+                vector_names_output.write(
+                    '%s ---- %s\n' % (
+                        good_name,
+                        similarity.get_result_category_from_similarity(similarities))
+                )
             except Exception as e:
                 error_row = 'name: %s, error: %s\n' % (good_name, str(e))
                 error_name_output.write(str(good_name) + '\n')
@@ -34,6 +42,7 @@ def save_good_name_to_similarity_vector(good_names, output_path):
                 error_name_output.flush()
                 vector_output.flush()
                 error_output.flush()
+                vector_names_output.flush()
 
 
 class SimilarityCalculator:
@@ -69,7 +78,6 @@ class SimilarityCalculator:
 
 
 def calculate_similarity(similarity_callback, good_names, indexes, q1, q2):
-    print('ddddddddddddd')
     saved_similarities_dict = resource.get_saved_similarity()
     similarity_calculator = SimilarityCalculator(saved_similarities_dict, get_similarity())
     for index in range(*indexes):
